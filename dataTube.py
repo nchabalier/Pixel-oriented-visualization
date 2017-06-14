@@ -31,37 +31,38 @@ import copy
 
 class Trapezoid():
   
-  def __init__(self, graph, coord, rotation, size):
+  def __init__(self, graph, coord, rotation, size, triangleWidth):
     self.graph = graph
     self.coord = coord
     self.rotation = rotation
     self.size = size  
+    self.triangleWidth = self.size.getH()*triangleWidth
     
     self.drawTrapezoid()
   
   def drawTrapezoid(self):
-    self.rectangleNode = graph.addNode()
-    graph['viewLayout'][self.rectangleNode] = self.coord
-    graph['viewShape'][self.rectangleNode] = tlp.NodeShape.Square
-    graph['viewSize'][self.rectangleNode] = self.size
-    graph['viewRotation'][self.rectangleNode] = self.rotation
+    self.rectangleNode = self.graph.addNode()
+    self.graph['viewLayout'][self.rectangleNode] = self.coord
+    self.graph['viewShape'][self.rectangleNode] = tlp.NodeShape.Square
+    self.graph['viewSize'][self.rectangleNode] = self.size
+    self.graph['viewRotation'][self.rectangleNode] = self.rotation
   
     #Height of the rectangle / 2
     dist = self.size.getH()/2
     #Vector from the center of the rectangle to the 
     vec = tlp.Coord(dist*math.cos(self.rotation+math.pi/2), dist*math.sin(self.rotation+math.pi/2), 0)
     
-    self.triangleNode1 = graph.addNode()
-    graph['viewLayout'][self.triangleNode1] = self.coord + vec
-    graph['viewShape'][self.triangleNode1] = tlp.NodeShape.Triangle
-    graph['viewSize'][self.triangleNode1] = tlp.Size(self.size.getH()/2,self.size.getW(),0)
-    graph['viewRotation'][self.triangleNode1] = self.rotation+math.pi/2
+    self.triangleNode1 = self.graph.addNode()
+    self.graph['viewLayout'][self.triangleNode1] = self.coord + vec
+    self.graph['viewShape'][self.triangleNode1] = tlp.NodeShape.Triangle
+    self.graph['viewSize'][self.triangleNode1] = tlp.Size(self.triangleWidth,self.size.getW(),0)
+    self.graph['viewRotation'][self.triangleNode1] = self.rotation+math.pi/2
     
-    self.triangleNode2 = graph.addNode()
-    graph['viewLayout'][self.triangleNode2] = self.coord - vec
-    graph['viewShape'][self.triangleNode2] = tlp.NodeShape.Triangle
-    graph['viewSize'][self.triangleNode2] = tlp.Size(self.size.getH()/2,self.size.getW(),0)
-    graph['viewRotation'][self.triangleNode2] = self.rotation+math.pi/2
+    self.triangleNode2 = self.graph.addNode()
+    self.graph['viewLayout'][self.triangleNode2] = self.coord - vec
+    self.graph['viewShape'][self.triangleNode2] = tlp.NodeShape.Triangle
+    self.graph['viewSize'][self.triangleNode2] = tlp.Size(self.triangleWidth,self.size.getW(),0)
+    self.graph['viewRotation'][self.triangleNode2] = self.rotation+math.pi/2
     
   def color(self, color):
     self.graph['viewColor'][self.rectangleNode] = color
@@ -71,7 +72,7 @@ class Trapezoid():
 
 class CircleSegment:
     def __init__(self, graph):
-        self.graph = graph.addSubGraph("CircleSegments")
+        self.graph = graph.addSubGraph("Data Tube")
         #self.nbDimension = 7 #TODO: nbDimension = nb of attributes
         self.nbOfNodes = graph.numberOfNodes()
         self.nodes = []
@@ -112,27 +113,27 @@ class CircleSegment:
 
 
     #Create all the complete circle segment graph with attributes given
-    def createAllCircleSegments(self, columns):
+    def createAllCircleSegments(self, columns, trapezoidWidth):
       self.columns = columns
       self.nbDimension = len(columns)
       
       
-      self.createAxis()
+      #self.createAxis()
       self.initMaxMinElements()
       
       cmpTest = 0
       for c in range(len(self.columns)):
         if True:#cmpTest%2 == 0:
           self.currentPos = 2
-          for n in range(50):#range(len(self.nodes)): #
+          for n in range(500):#range(len(self.nodes)): #
             #for _ in range(self.currentPos):
-            self.createASegment(c, n)
-            self.currentPos+=self.currentPos/2
+            self.createASegment(c, n,trapezoidWidth)
+            self.currentPos+=self.currentPos*trapezoidWidth
         cmpTest+=1
       
     # n: is the distance to center (the n-th node)
     # c: is the number of the attribute we are drawing
-    def createASegment(self, c, n):
+    def createASegment(self, c, n, trapezoidWidth):
 
         #node = self.duplicateNode(self.nodes[n])
         
@@ -143,15 +144,15 @@ class CircleSegment:
         #h = self.currentPos * math.cos(angle-minAngle)
         height = self.currentPos * math.sin(angle-minAngle)*2
         #h2 = self.currentPos*(3/2) * math.cos(angle-minAngle)
-        posX = math.cos(angle)*self.currentPos*(1.25)
-        posY = math.sin(angle)*self.currentPos*(1.25)
+        posX = math.cos(angle)*self.currentPos*(1.0+trapezoidWidth/2.0)
+        posY = math.sin(angle)*self.currentPos*(1.0+trapezoidWidth/2.0)
         coord = tlp.Coord(posX,posY,0)
-        size = tlp.Size(self.currentPos/2,height,0)
+        size = tlp.Size(self.currentPos*trapezoidWidth,height,0)
         
         
         #triangleSize = 
         
-        trapezoid = Trapezoid(self.graph, coord, angle, size)
+        trapezoid = Trapezoid(self.graph, coord, angle, size,trapezoidWidth)
         
         #self.graph['viewLayout'][node] = tlp.Vec3f(posX,posY,0)
         #self.graph['viewShape'][node] =  tlp.NodeShape.Square  
@@ -178,7 +179,7 @@ def main(graph):
     circleSegments = CircleSegment(graph)
     #graph.delNodes(graph.getNodes())
     columns = ("Column_0", "Column_1", "Column_2", "Column_3", "Column_6", "Column_7", "Column_9","Column_0", "Column_1", "Column_2", "Column_3", "Column_6", "Column_7", "Column_9", "Column_0", "Column_1", "Column_2", "Column_3", "Column_6", "Column_7", "Column_9","Column_0", "Column_1", "Column_2", "Column_3", "Column_6", "Column_7", "Column_9")
-    circleSegments.createAllCircleSegments(columns)
+    circleSegments.createAllCircleSegments(columns, 0.05)
     
         
 
