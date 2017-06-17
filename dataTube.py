@@ -1,33 +1,9 @@
 # Powered by Python 2.7
 
-# To cancel the modifications performed by the script
-# on the current graph, click on the undo button.
-
-# Some useful keyboards shortcuts : 
-#   * Ctrl + D : comment selected lines.
-#   * Ctrl + Shift + D  : uncomment selected lines.
-#   * Ctrl + I : indent selected lines.
-#   * Ctrl + Shift + I  : unindent selected lines.
-#   * Ctrl + Return  : run script.
-#   * Ctrl + F  : find selected text.
-#   * Ctrl + R  : replace selected text.
-#   * Ctrl + Space  : show auto-completion dialog.
-
 from tulip import *
 import math
 import copy
 
-# the updateVisualization(centerViews = True) function can be called
-# during script execution to update the opened views
-
-# the pauseScript() function can be called to pause the script execution.
-# To resume the script execution, you will have to click on the "Run script " button.
-
-# the runGraphScript(scriptFile, graph) function can be called to launch another edited script on a tlp.Graph object.
-# The scriptFile parameter defines the script name to call (in the form [a-zA-Z0-9_]+.py)
-
-# the main(graph) function must be defined 
-# to run the script on the current graph
 
 class Trapezoid():
   
@@ -135,38 +111,30 @@ class CircleSegment:
     # c: is the number of the attribute we are drawing
     def createASegment(self, c, n, trapezoidWidth):
 
-        #node = self.duplicateNode(self.nodes[n])
-        
-        
         angle = 2*math.pi*(c+0.5)/self.nbDimension
         minAngle = 2*math.pi*(c)/self.nbDimension
-        #height = 2*self.currentPos * math.sin(angle-minAngle)
-        #h = self.currentPos * math.cos(angle-minAngle)
-        height = self.currentPos * math.sin(angle-minAngle)*2
-        #h2 = self.currentPos*(3/2) * math.cos(angle-minAngle)
+       
+        tempX = math.cos(angle)*self.currentPos
+        tempY = math.sin(angle)*self.currentPos
+        #The weight of rectangle
+        height = 2.0*math.sqrt(tempX*tempX + tempY*tempY)*math.tan(angle-minAngle)
+        
+        #Position to place the rectangle
         posX = math.cos(angle)*self.currentPos*(1.0+trapezoidWidth/2.0)
         posY = math.sin(angle)*self.currentPos*(1.0+trapezoidWidth/2.0)
         coord = tlp.Coord(posX,posY,0)
         size = tlp.Size(self.currentPos*trapezoidWidth,height,0)
         
         
-        #triangleSize = 
         
         trapezoid = Trapezoid(self.graph, coord, angle, size,trapezoidWidth)
         
-        #self.graph['viewLayout'][node] = tlp.Vec3f(posX,posY,0)
-        #self.graph['viewShape'][node] =  tlp.NodeShape.Square  
-        #self.graph['viewSize'][node] = tlp.Size(size,1,0)
-        #self.graph['viewRotation'][node] = angle + math.pi/2
-        #self.graph['viewColor'][node] = tlp.Color(distance%255,distance%255,distance%255)
+        
+        
         value = self.graph[self.columns[c]][self.nodes[n]]
-        #if attribute == 6:
-        #  print(value)
+
         value = int((float(value - self.minElements[c])/(self.maxElements[c]-self.minElements[c]))*255)
-        #if attribute == 6:
-        #  print("NewValue",value)
-        #print(value)
-        #self.graph['viewColor'][node] = tlp.Color(value,value,value)
+
         trapezoid.color(tlp.Color(value,value,value))
         
             
@@ -178,8 +146,6 @@ def main(graph):
     graph.delEdges(graph.getEdges())
     circleSegments = CircleSegment(graph)
     #graph.delNodes(graph.getNodes())
+    #columns = ("Column_0", "Column_1", "Column_2", "Column_3")
     columns = ("Column_0", "Column_1", "Column_2", "Column_3", "Column_6", "Column_7", "Column_9","Column_0", "Column_1", "Column_2", "Column_3", "Column_6", "Column_7", "Column_9", "Column_0", "Column_1", "Column_2", "Column_3", "Column_6", "Column_7", "Column_9","Column_0", "Column_1", "Column_2", "Column_3", "Column_6", "Column_7", "Column_9")
     circleSegments.createAllCircleSegments(columns, 0.05)
-    
-        
-
