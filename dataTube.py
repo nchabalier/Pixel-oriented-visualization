@@ -101,7 +101,7 @@ class CircleSegment:
       for c in range(len(self.columns)):
         if True:#cmpTest%2 == 0:
           self.currentPos = 2
-          for n in range(500):#range(len(self.nodes)): #
+          for n in range(len(self.nodes)): #
             #for _ in range(self.currentPos):
             self.createASegment(c, n,trapezoidWidth)
             self.currentPos+=self.currentPos*trapezoidWidth
@@ -148,4 +148,4 @@ def main(graph):
     #graph.delNodes(graph.getNodes())
     #columns = ("Column_0", "Column_1", "Column_2", "Column_3")
     columns = ("Column_0", "Column_1", "Column_2", "Column_3", "Column_6", "Column_7", "Column_9","Column_0", "Column_1", "Column_2", "Column_3", "Column_6", "Column_7", "Column_9", "Column_0", "Column_1", "Column_2", "Column_3", "Column_6", "Column_7", "Column_9","Column_0", "Column_1", "Column_2", "Column_3", "Column_6", "Column_7", "Column_9")
-    circleSegments.createAllCircleSegments(columns, 0.05)
+    circleSegments.createAllCircleSegments(columns, 0.005)

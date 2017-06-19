@@ -1,33 +1,9 @@
 # Powered by Python 2.7
 
-# To cancel the modifications performed by the script
-# on the current graph, click on the undo button.
-
-# Some useful keyboards shortcuts : 
-#   * Ctrl + D : comment selected lines.
-#   * Ctrl + Shift + D  : uncomment selected lines.
-#   * Ctrl + I : indent selected lines.
-#   * Ctrl + Shift + I  : unindent selected lines.
-#   * Ctrl + Return  : run script.
-#   * Ctrl + F  : find selected text.
-#   * Ctrl + R  : replace selected text.
-#   * Ctrl + Space  : show auto-completion dialog.
-
 from tulip import *
 import math
 import copy
 
-# the updateVisualization(centerViews = True) function can be called
-# during script execution to update the opened views
-
-# the pauseScript() function can be called to pause the script execution.
-# To resume the script execution, you will have to click on the "Run script " button.
-
-# the runGraphScript(scriptFile, graph) function can be called to launch another edited script on a tlp.Graph object.
-# The scriptFile parameter defines the script name to call (in the form [a-zA-Z0-9_]+.py)
-
-# the main(graph) function must be defined 
-# to run the script on the current graph
 
 class CircleSegment:
     def __init__(self, graph):
@@ -120,7 +96,8 @@ def main(graph):
     graph.delEdges(graph.getEdges())
     circleSegments = CircleSegment(graph)
     #graph.delNodes(graph.getNodes())
-    columns = ("Column_0", "Column_1", "Column_2", "Column_3", "Column_6", "Column_7", "Column_9")
+    columns = ("Column_0", "Column_1", "Column_2", "Column_3", "Column_6", "Column_7", "Column_9", "Column_0", "Column_1", "Column_2", "Column_3", "Column_6", "Column_7", "Column_9")
+    #columns = ("Column_0", "Column_1", "Column_2", "Column_3", "Column_6", "Column_7", "Column_9")
     circleSegments.createAllCircleSegments(columns)
     
         
