@@ -37,17 +37,12 @@ class DataTubePlugin(tlp.Algorithm):
                 # (see documentation of class tlp.DataSet).
                 
                 properties = getNumericProperties(self.graph)
-                for property in properties:
-                #  print self.graph[property]
-                  print property
+                
                 
                 size = self.dataSet["size"]
                 sortProperty = self.dataSet["sorted by"]
                 colorScale = self.dataSet["color scale"]
-                #colorScale.getColorAtPos(0.5)
-                print("Color scale: ", type(colorScale))
-                for key, value in colorScale.iteritems():
-                  print(key, value)
+                
                 
                 self.graph.delEdges(self.graph.getEdges())
                 circleSegments = CircleSegment(self.graph, sortProperty, colorScale)
@@ -135,7 +130,7 @@ class CircleSegment:
       for p in self.properties:
         self.maxElements.append(p.getNodeMax())
         self.minElements.append(p.getNodeMin())
-        print(p.getNodeMax(), p.getNodeMin())
+       
     
     def createAxis(self):
         centralNode = self.graph.addNode()
@@ -146,7 +141,7 @@ class CircleSegment:
             node = self.graph.addNode()
             posX = math.cos(2*math.pi*i/self.nbDimension)*self.nbOfNodes
             posY = math.sin(2*math.pi*i/self.nbDimension)*self.nbOfNodes
-            #print(posX, " ", posY)
+            
             self.graph['viewLayout'][node] = tlp.Vec3f(posX,posY,10)
 
             edge = self.graph.addEdge(centralNode, node)
@@ -222,7 +217,7 @@ class CircleSegment:
       
       for value, color in self.colorScale.iteritems():
         newDist = abs(pos-value)
-        #print(newDist)
+        
         if newDist < minDist:
           theColor = color
           minDist = newDist
